@@ -1,0 +1,45 @@
+'use strict';
+const { _electron: electron } = require('playwright');
+const fs = require('node:fs/promises');
+const path = require('node:path');
+const os = require('node:os');
+const assert = require('node:assert/strict');
+const root = path.resolve(__dirname, '..');
+(async () => {
+  const profile = await fs.mkdtemp(path.join(os.tmpdir(), 'orbita-bilingual-app-'));
+  const app = await electron.launch({ executablePath: path.join(root, '.runtime/electron/electron.exe'), args: [root], env: { ...process.env, ORBITA_TEST_PROFILE: profile }, timeout: 30000 });
+  const page = await app.firstWindow();
+  const errors = []; page.on('pageerror', error => errors.push(error.message));
+  const output = path.join(root, 'test-output'); await fs.mkdir(output, { recursive: true });
+  try {
+    await page.waitForFunction(() => document.querySelector('#page-label').textContent === 'Conversation');
+    assert.equal(await page.locator('#language-dialog').count(), 0);
+    assert.equal((await page.evaluate(() => window.orbita.call('init'))).settings.language, 'en');
+    await page.screenshot({ path: path.join(output, 'english-first-start.png') });
+    assert.equal(await page.locator('#welcome h1').textContent(), 'What shall we do?');
+    assert.equal(await page.locator('#prompt').getAttribute('placeholder'), 'Tell me what you want to do…');
+    await page.locator('[data-page="models"]').click();
+    await page.waitForFunction(() => document.querySelector('#page-models h1').textContent === 'Your models');
+    assert.equal(await page.locator('#source-local h3').textContent(), 'Choose a file');
+    await page.locator('[data-page="settings"]').click();
+    await page.waitForFunction(() => document.querySelector('#page-settings h1').textContent === 'Make Órbita yours');
+    await page.locator('[data-settings="behavior"]').click();
+    await page.locator('#memory-section summary').click();
+    assert.equal(await page.locator('#memory-section summary').textContent(), 'Memory');
+    assert.equal(await page.locator('#memory-input').getAttribute('placeholder'), 'Something you want it to remember…');
+    await page.screenshot({ path: path.join(output, 'ajustes-ingles.png') });
+    await page.locator('[data-settings="performance"]').click();
+    const performance = await page.locator('#settings-performance').textContent();
+    assert.ok(performance.includes('Memory and speed'));
+    assert.ok(performance.includes('Processor only'));
+    await page.locator('[data-settings="appearance"]').click();
+    await page.locator('#interface-language').selectOption('es');
+    await page.waitForFunction(() => document.querySelector('#page-settings h1').textContent === 'Hacé tuya Órbita');
+    await page.reload();
+    await page.waitForFunction(() => window.orbitaI18n?.language === 'es' && document.querySelector('#access-button'));
+    assert.equal(await page.locator('#language-dialog').count(), 0);
+    assert.equal((await page.evaluate(() => window.orbita.call('init'))).settings.language, 'es');
+    assert.deepEqual(errors, []);
+    console.log(JSON.stringify({ bilingualApp: 'OK', firstRun: true, english: 'welcome/models/settings/memory/performance', spanishReload: true, jsErrors: errors, profile }));
+  } finally { await app.close(); }
+})().catch(error => { console.error(error); process.exitCode = 1; });
