@@ -9,7 +9,7 @@ const { permissionFor } = require('../access-policy.cjs');
 const { crc32 } = require('../project-zip.cjs');
 const json = value => JSON.stringify(value);
 async function fixture(t) {
-  const root = await fs.mkdtemp(path.join(os.tmpdir(), 'orbita-auto-')), events = [], responses = [], requests = [], opened = [];
+  const root = await fs.realpath(await fs.mkdtemp(path.join(os.tmpdir(), 'orbita-auto-'))), events = [], responses = [], requests = [], opened = [];
   const engine = { activeId: 'test', models: [], status: () => ({}), async generate(messages, options) { requests.push({ messages, options }); const answer = responses.shift() || json({ tool: 'reply', content: 'Listo.' }); options.onDelta(answer); return answer; } };
   const backend = new Backend({ dataDir: path.join(root, 'data'), engine, emit: event => events.push(event), desktop: { openPath: async absolute => { opened.push(absolute); } } });
   await backend.init();
