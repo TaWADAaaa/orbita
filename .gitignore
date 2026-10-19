@@ -1,0 +1,11 @@
+.runtime/
+node_modules/
+*.log
+test-output/
+.versions/
+dist/
+tests/fixtures/*.wav
+.env
+.env.*
+*.pem
+*.key

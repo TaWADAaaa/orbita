@@ -1,0 +1,21 @@
+{
+  "name": "orbita-local",
+  "version": "0.3.0",
+  "private": true,
+  "description": "A simple, open-source desktop coding assistant powered by local AI models.",
+  "main": "main.cjs",
+  "scripts": {
+    "start": "node launch.cjs",
+    "setup": "node prepare-electron.cjs",
+    "test": "node scripts/test.cjs",
+    "check": "node scripts/check.cjs",
+    "package": "node scripts/package.cjs"
+  },
+  "engines": { "node": ">=20" },
+  "os": ["win32"],
+  "cpu": ["x64"],
+  "repository": { "type": "git", "url": "https://github.com/TaWADAaaa/orbita.git" },
+  "homepage": "https://github.com/TaWADAaaa/orbita#readme",
+  "bugs": { "url": "https://github.com/TaWADAaaa/orbita/issues" },
+  "license": "MIT"
+}

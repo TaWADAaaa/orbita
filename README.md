@@ -6,6 +6,8 @@ Chat, create and edit real project files, run commands, and read the web from on
 
 Órbita is free and open source under the [MIT License](LICENSE). The public project and documentation are in English; Spanish is also available in the app.
 
+![Órbita desktop workspace](docs/assets/orbita.png)
+
 ## What it does
 
 - **One chat:** the assistant decides whether to answer or use tools. Coding requests are instructed to create actual files, not just display a code block.
