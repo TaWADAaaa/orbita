@@ -1,0 +1,26 @@
+ORBITA
+
+Read README.md for setup, features, permission levels, and limitations.
+
+Windows x64 quick start from a source checkout:
+1. Install Node.js 20 or newer.
+2. Run: npm install
+3. Run: npm start
+4. Add a public, single-file GGUF chat model in Models.
+5. Prepare the local model engine when prompted.
+
+The first launch downloads and verifies the Electron desktop runtime.
+You can prepare it explicitly with: npm run setup
+
+No app account is required. Model files and external runtimes download
+separately. Conversation and voice inference run on your computer.
+Web searches and downloads use the internet.
+
+Start with access level 1. Console commands can change files outside
+the selected project, and commands have no automatic undo.
+English is the default; Spanish is available in Settings.
+
+Application data: %APPDATA%\Orbita Local
+License: LICENSE
+Third-party components: THIRD_PARTY_NOTICES.md
+Optional donations: DONATIONS.md
